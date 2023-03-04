@@ -9,7 +9,7 @@ const N_BLOG_POSTS_FEED = 20;
 /** @type {import('@docusaurus/types').Config} */
 const config = {
     title: "HacheNotes",
-    favicon: "img/favicon.ico",
+    favicon: "/img/hache.svg",
 
     // Set the production url of your site here
     url: "https://h4c5.github.io",
@@ -64,7 +64,7 @@ const config = {
                         const { blogPosts, defaultCreateFeedItems, ...rest } =
                             params;
                         return defaultCreateFeedItems({
-                            // keep only the 10 most recent blog posts in the feed
+                            // keep only the most recent blog posts in the feed
                             blogPosts: blogPosts.filter(
                                 (item, index) => index < N_BLOG_POSTS_FEED
                             ),
@@ -89,10 +89,10 @@ const config = {
             // image: 'img/docusaurus-social-card.jpg',
             navbar: {
                 title: "HacheNotes",
-                // logo: {
-                //   alt: 'My Site Logo',
-                //   src: 'img/logo.svg',
-                // },
+                logo: {
+                    alt: "HacheNotes logo (an axe)",
+                    src: "img/hache.svg",
+                },
                 items: [
                     {
                         type: "doc",
@@ -107,42 +107,19 @@ const config = {
                 style: "dark",
                 links: [
                     {
-                        title: "Notes",
-                        items: [
-                            {
-                                label: "Python",
-                                to: "/docs/python",
-                            },
-                        ],
+                        label: "Github",
+                        href: "https://github.com/h4c5",
                     },
                     {
-                        title: "Community",
-                        items: [
-                            {
-                                label: "Github",
-                                href: "https://github.com/h4c5",
-                            },
-                            {
-                                label: "Gitlab",
-                                href: "https://gitlab.com/h4c5",
-                            },
-                            {
-                                label: "Stack Overflow",
-                                href: "https://stackoverflow.com/users/7685195/h4kim",
-                            },
-                        ],
+                        label: "Gitlab",
+                        href: "https://gitlab.com/h4c5",
                     },
                     {
-                        title: "More",
-                        items: [
-                            {
-                                label: "Blog",
-                                to: "/blog",
-                            },
-                        ],
+                        label: "Stack Overflow",
+                        href: "https://stackoverflow.com/users/7685195/h4kim",
                     },
                 ],
-                copyright: `Copyright © ${new Date().getFullYear()} HacheNotes. Built with Docusaurus.`,
+                copyright: `Copyright © ${new Date().getFullYear()} HacheNotes. Built with <a target="_blank" href="https://docusaurus.io/fr/">Docusaurus</a>.`,
             },
             prism: {
                 theme: lightCodeTheme,
