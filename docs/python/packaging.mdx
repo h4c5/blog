@@ -12,6 +12,7 @@ tags:
     - setup.py
     - setup.cfg
     - poetry
+    - pipenv
 ---
 
 import Giscus from "@site/src/components/Giscus.js";
@@ -23,7 +24,8 @@ Les informations et conclusions de cet article sont basées sur mes propres anal
 interprétations, elles ne sont pas entièrement fiables. Je vous invite à vous
 référer aux sources originelles et à me faire vos retour en commentaire.
 
-Encore mieux, n'hésitez à proposer directement des modifications sur Github 😉
+Encore mieux, n'hésitez à proposer directement des
+[modifications sur Github](https://github.com/h4c5/blog/edit/main/docs/python/packaging.mdx) 😉
 
 :::
 
@@ -33,10 +35,67 @@ Encore mieux, n'hésitez à proposer directement des modifications sur Github �
 
 ## C'est quoi le packaging en python ?
 
+Packager son code, c'est l'emballer dans un joli paquet pour pouvoir le distribuer facilement à d'autres personnes ou
+le déployer sur d'autres environnements que celui sur lequel on l'a développé 🎁.
+
+En fait vous utilisez tout le temps des paquets que d'autres ont emballé pour vous. <br/>
+C'est le cas à chaque fois que vous faites : `import apackage`
+
+Alors comment on fait pour rendre son code importable comme ça ? Et bien, c'est plus complexe qu'il n'y paraît. En fait
+il y a tout un groupe de travail, la [Python Packaging Authority](https://github.com/pypa) (alias pypa), qui bosse
+dessus [depuis 2011](https://www.pypa.io/en/latest/history/#before-2013).
+
+## Un écosystème assez compliqué
+
+Voilà comment le regretté [site Sam & Max](https://sametmax2.com/vive-setup-cfg-et-mort-a-pyproject-toml/index.html)
+décrivait l'évolution de l'écosystème du packaging en python en 2018 :
+
+> D'abord on a `distutils`, `setuptools`, `distribute`, and `distribute2` qui ont tous été à un moment les "standards"
+> recommandés pour packager une lib. Ensuite on a eu l'époque des `eggs`, `exe`, et autres trucs que `easy_install`
+> allait chercher n'importe où dans la nature en suivant aveuglément des liens sur PyPi. Sans compter les machins qu'il
+> fallait compiler à tout bout de champ. Et puis rien n'était chiffré au download, `pip` n'était pas packagé avec
+> Python, il crevait sur des erreurs stupides type encodage mal géré...
+>
+> À ça se rajoute que `virtualenv` était un truc à part, avec plein de concurrents, et linkait les packages système par
+> défaut. Sans oublier qu'on avait pas `python -m`.
+>
+> Bref, le packaging Python, ça a été vraiment la merde. Avec en plus une doc de merde.
+
+Pas facile de se repérer dans tout ça. J'ajouterai qu'en plus le packaging n'est pas toujours une notion abordé lors des
+formations python. C'est le genre de truc que l'on découvre sur le tas le jour où on a besoin...
+
+Je ne vais pas revenir ici sur tout l'historique décrit par Sam & Max car je ne l'ai pas connu et je pense que cela n'a
+pas grand intérêt. Je vais juste revenir sur les façons les plus courantes de procéder que j'ai trouvé dans les
+librairies que j'utilise couramment et sur la façon dont je procède à titre personnel.
+
+### setup.py
+
+Le fichier `setup.py` est le plus ancien des trois standards de packaging que je présente ici.
+
+### setup.cfg
+
+### pyproject.toml
+
+## Le layout
+
+### Le layout à plat
+
+### Le layout src
+
+## Les Alernatives à setuptools
+
+La méthode de pac
+
+### Pipenv
+
+### Poetry
+
+## TL;DR Packager son code python en 2023
+
+## Aller plus loin
+
 ## Références
 
-### ko
-
-1. [An Overview of Packaging for Python](https://packaging.python.org/en/latest/overview/)
+1. [Le Guide de pypa : An Overview of Packaging for Python](https://packaging.python.org/en/latest/overview/)
 
 <Giscus />
