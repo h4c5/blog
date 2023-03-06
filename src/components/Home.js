@@ -8,8 +8,9 @@ import BlogNews from "./BlogNews";
 const articlesNews = [
     {
         link: "/docs/python/packaging-python",
-        title: "pyproject.toml",
-        description: "Packaging python",
+        title: "Packager son code python",
+        description:
+            "Packager son code python en 2023 avec setuptools et pyproject.toml",
     },
 ];
 
