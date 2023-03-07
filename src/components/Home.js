@@ -9,8 +9,8 @@ const articlesNews = [
     {
         link: "/docs/python/packaging-python",
         title: "Packager son code python",
-        description:
-            "Packager son code python en 2023 avec setuptools et pyproject.toml",
+        date: "2023-03-04",
+        description: "Packager son code python en 2023 avec pyproject.toml",
     },
 ];
 

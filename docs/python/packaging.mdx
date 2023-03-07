@@ -2,7 +2,7 @@
 id: packaging-python
 slug: packaging-python
 title: Packager son code python
-description: Packager son code python en 2023 avec setuptools et pyproject.toml
+description: Packager son code python en 2023 avec pyproject.toml
 date: "2023-03-04"
 tags:
     - python
@@ -73,16 +73,15 @@ count_lines_file("count_lines.py")
 3
 ```
 
-Lorsque l'on execute l'instruction `from count_lines import count_lines_file`, python cherche le module successivement
+Lorsque l'on execute l'instruction `from count_lines import count_lines_file`, python cherche le module
 dans le répertoire courant (là où python a été lancé) ; puis dans le répertoire d'installation de python
-`/usr/lib/python3.11` ; puis dans le répertoire par défaut pour l'installation des packages :
+`/usr/lib/python3.11` ; puis dans le répertoire où python installe les packages par défaut :
 `/usr/lib/python3.11/site-packages`.
 
-Dès que le module est trouvé, il est exécuté dans l'environnement python et les éléments qui y sont définis sont alors
+Dès que le module est trouvé, il est exécuté dans l'environnement python et les éléments qui y sont définis deviennent
 disponibles.
 
-La liste des répertoires dans lequel python cherche les modules est accessible depuis python dans la variable `path` du
-module `sys` :
+La liste des répertoires dans lequel python cherche les modules est grâce au package `sys` :
 
 ```python
 import sys
@@ -93,7 +92,7 @@ sys.path
 ### Package python
 
 Un [_package_](https://docs.python.org/fr/3/tutorial/modules.html#packages) est un dossier qui regroupe un ensemble de
-modules python et qui de faciliter leur accès en créant un espace de nommage utilisant une notation "pointée" :
+modules python et qui facilite leur accès en créant un espace de nommage :
 `from numpy.linalg import norm`.
 
 Pour créer un package, il suffit de créer un fichier `__init__.py` (qui peut tout a fait être vide) dans un dossier.
@@ -107,7 +106,7 @@ count_package
 └── count_lines.py
 ```
 
-A présent on peut utiliser la notation pointée pour importer le module `count_lines` :
+A présent on peut utiliser la notation "pointée" pour importer le module `count_lines` :
 
 ```python
 from count_package.count_lines import count_lines_file
@@ -116,15 +115,15 @@ count_lines_file("count_lines.py")
 ```
 
 Lorsque l'on execute l'instruction `from count_package.count_lines import count_lines_file`, python cherche un dossier
-`count_package` contenant un fichier `__init__.py` dans les répertoires de `sys.path`, i.e. le répertoire courant et les
-répertoires par défaut vus plus haut.
+`count_package` contenant un fichier `__init__.py` dans les répertoires de `sys.path` (le répertoire courant et les
+répertoires par défaut vus plus haut).
 
-Si le package est trouvé, les modules qui y sont présent sont accessibles via la notation pointée.
+Si le package est trouvé, les modules qui y sont présents sont accessibles via la notation "pointée".
 
 ## Distribuer son package
 
 Pour distribuer son package on crée une _distribution_. Il s'agit d'une archive contenant le package à distribuer et qui
-sera ensuite installé par des tiers.
+pourra ensuite être installé avec le gestionnaire de paquet _pip_.
 
 Il en existe deux formats de distributions principaux :
 
@@ -138,7 +137,7 @@ Il en existe deux formats de distributions principaux :
 Le format `wheel` est le format de type _Built Distribution_ de référence. Il s'agit du format développé par la Python
 Packaging Authority et qui est très souvent utilisé pour distribuer les packages.
 
-Le workflow de distribution ressemble donc un à ça :
+Le workflow de distribution ressemble schématiquement à ça :
 
 ```mermaid
 flowchart LR
@@ -191,8 +190,7 @@ non mutuellement exclusifs) :
     ([0.2 millions de résultats sur github](https://github.com/search?q=filename%3Asetup.py))
 
 `pyproject.toml` est aujourd'hui le [standard officiel](https://peps.python.org/pep-0621/) mais reste encore très
-minoritaire par rapport à `setup.py`, c'est pourquoi nous aborderons les trois formats de fichier pour comprendre leur
-forces et leur faiblesses.
+minoritaire par rapport à `setup.py`, c'est pourquoi nous aborderons les trois formats de fichier.
 
 ### setup.py
 
@@ -214,13 +212,12 @@ setup(
 )
 ```
 
-Le fait qu'il s'agisse d'un fichier python fait à la fois sa force et sa faiblesse. Puisque c'est du python de nombreux
-projets construisent certains champs dynamiquement, la version par exemple. C'est donc un format difficile à parser et
-à interfacer avec d'autres outils externes.
+Le fait qu'il s'agisse d'un fichier python fait à la fois sa force et sa faiblesse : il est possible de construire la
+configuration dynamiquement dans le code mais ça rend la configuration difficile à parser et à interfacer avec d'autres
+outils externes.
 
-Puisqu'il s'agit d'un format propre à `setuptools` les distributions de type sdist ne seront installable que si
-setuptools a bien été installé sur l'environnement cible et dans une version compatible, ce qui peut très bien ne pas
-être le cas.
+Puisqu'il s'agit d'un format propre à `setuptools` les distributions de type _sdist_ ne seront installables que si
+setuptools a bien été installé sur l'environnement cible et dans une version compatible.
 
 De plus puisque l'immense majorité des projets se sont mis à utiliser setuptools et `setup.py` il est devenu difficile
 de proposer des alternatives et des projets comme [flit](https://pypi.org/project/flit/) on dû être construit "par
@@ -233,13 +230,13 @@ basant sur `sys.version` mais ce faisant vous introduiriez un bug vicieux : la d
 fonction de l'environnement qui compile la distribution de votre package et non pas en fonction de l'environnement de
 l'utilisateur qui l'installe.
 
-Une autre mauvaise habitude récurrente était
+Il est aussi tentant
 [d'importer le package depuis `setup.py`](https://bernat.tech/posts/growing-pain/#importing-the-built-package-from-within-setuppy)
-pour gérer la version.
+pour gérer la version sa version par exemple. Ce qui fera planter les distributions sdist.
 
 Aujourd'hui l'utilisation de `setup.py` est possible mais il est conseillé de privilégier une utilisation déclarative.
-De plus l'utilisation du fichier comme un script : `python setup.py` est **déprécié** comme l'indique la documentation
-de setuptools :
+De plus l'utilisation du fichier comme script : `python setup.py` est **déprécié** comme l'indique la documentation de
+setuptools :
 
 > It is important to remember, however, that running this file as a script (e.g. python setup.py sdist) is strongly
 > discouraged, and that the majority of the command line interfaces are (or will be) deprecated (e.g. python setup.py
@@ -367,12 +364,25 @@ construire une distribution sdist et une wheel.
 Vous pourrez ensuite utiliser le package [`twine`](https://twine.readthedocs.io/en/stable/) pour le publier sur le
 repository officiel [pypi](https://pypi.org/).
 
+:::info
+
+Pour des raisons de rétro-compatibilité avec les anciennes versions des librairies de packaging,
+[vous pouvez créer un fichier `setup.py` minimal](https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html)
+en plus du fichier `pyproject.toml` :
+
+```python title="setup.py"
+from setuptools import setup
+
+setup()
+```
+
+:::
+
 ## Le layout
 
 Lors de la configuration de votre package, peut importe la méthode utilisée (`setup.py`, `setup.cfg` ou
-`pyproject.toml`), vous devez spécifier quels sont les packages que vous souhaitez inclure dans votre distribution.
-
-Par défaut, vous devez même censé détailler tous les sous-packages explicitement :
+`pyproject.toml`), vous devez spécifier les packages **et les sous-packages** que vous souhaitez inclure dans votre
+distribution :
 
 ```toml title="pyproject.toml"
 [tool.setuptools]
@@ -469,18 +479,21 @@ résoudre les conflits entre les dépendances.
 
 Mes conseils pour packager votre code en 2023 :
 
--   Commencer avec `setuptools`, `build` et `twine` en suivant
-    [le guide de la documentation setuptools](https://setuptools.pypa.io/en/latest/userguide/quickstart.html).
--   Utiliser le fichier [pyproject.toml](https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html) pour
-    configurer votre projet.
--   Adopter le src-layout pour prendre de bonnes habitudes et éviter de tomber dans des pièges classiques.
--   Essayer [Poetry](https://python-poetry.org/).
+-   Utilisez le fichier [pyproject.toml](https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html) en
+    suivant [le guide setuptools](https://setuptools.pypa.io/en/latest/userguide/quickstart.html).
+-   Un petit coup de `pip install build && python -m build` et votre package est prêt à être distribué.
+-   Adoptez le src-layout.
 
-Si vous le souhaitez, j'ai créé un template cookie-cutter basique pour créer un nouveau package python qui est
-disponible sur Github. N'hésitez pas à me dire ce que vous en pensez et à me faire des suggestions.
+En bonus :
+
+-   Essayez [Poetry](https://python-poetry.org/).
+-   Utilisez [ce template `cookie-cutter`](https://github.com/h4c5/cookie-python-minimal) tout simple (ou créez le
+    votre) pour vos projets.
+
+### Estimons nous heureuses et heureux
 
 Tout ce que je vous ai raconté ici peut sembler beaucoup et pourtant je n'ai fait que survoler le sujet. En tout cas je
-pense que l'on peut s'estimer heureuses et heureux en 2023 lorsque l'on voit ce qu'écrivait le site Sam & Max en 2018 :
+pense que l'on peut s'estimer heureuses et heureux lorsque l'on voit ce qu'écrivait le site Sam & Max en 2018 :
 
 > D'abord on a `distutils`, `setuptools`, `distribute`, and `distribute2` qui ont tous été à un moment les "standards"
 > recommandés pour packager une lib. Ensuite on a eu l'époque des `eggs`, `exe`, et autres trucs que `easy_install`
@@ -492,6 +505,8 @@ pense que l'on peut s'estimer heureuses et heureux en 2023 lorsque l'on voit ce 
 > défaut. Sans oublier qu'on avait pas `python -m`.
 >
 > Bref, le packaging Python, ça a été vraiment la merde. Avec en plus une doc de merde.
+
+C'est quand même beaucoup plus simple aujourd'hui.
 
 ## Références
 
