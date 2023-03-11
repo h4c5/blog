@@ -3,7 +3,7 @@ id: packaging-python
 slug: packaging-python
 title: Packager son code python
 description: Packager son code python en 2023 avec pyproject.toml
-date: "2023-03-04"
+date: "2023-03-11"
 tags:
     - python
     - packaging
@@ -375,6 +375,53 @@ from setuptools import setup
 
 setup()
 ```
+
+:::
+
+### Gestion de la version
+
+Dans l'exemple de `pyproject.toml` vu plus haut la version du package est fixée manuellement. Il faut donc changer
+celle-ci à chaque fois que l'on souhaite publier une nouvelle version de son package.
+
+Contrairement à [poetry](https://python-poetry.org/docs/cli/#version) setuptools n'a pas (à ma connaissance) de commande
+intégrée pour modifier facilement la version du package dans le `pyproject.toml`. En revanche la pypa propose un
+package que je trouve très pratique pour gérer la version du package en s'appuyant sur git ou mercurial :
+[`setuptools-scm`](https://github.com/pypa/setuptools_scm/)
+
+Cela s'utilise très simplement en ajoutant la dépendance au `pyproject.toml` ainsi qu'en spécifiant que la version est
+dynamique :
+
+```toml title="pyproject.toml"
+[build-system]
+requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2"]
+
+[project]
+# version = "0.0.1"  # Remove any existing version parameter.
+dynamic = ["version"]
+
+[tool.setuptools_scm]
+write_to = "src/pkg/_version.py"
+```
+
+Lors de la construction du package `setuptools-scm` recherchera parmi le dernier tag ayant un numéro de version valide
+puis en déduira le numéro de version du package. Par défaut la version est construite à partir de trois éléments :
+
+1. Le dernier tag ayant un numéro de version valide (exemple : `v1.2.3`)
+2. La distance à ce tag (nombre de révision depuis ce tag)
+3. L'état du répertoire de travail (s'il y a des changements non commités)
+
+Une fois le numéro de version déduit, un fichier `_version.py` sera créé à l'intérieur de la distribution à l'endroit
+spécifié (ex : `src/pkg/_version.py`) et qui permettra de connaître la version du package à partir de la distribution
+sans que l'historique git ne soit présent sur l'environnement cible.
+
+:::info
+
+Si vous avez l'habitude de renseigner vous même le numéro de version de vos packages sachez que les formats valides pour
+les versions sont régis par la [PEP 440](https://peps.python.org/pep-0440/#version-scheme). Si vous ne respectez pas ces
+spécifications vous risquez probablement d'avoir des problèmes lors de la publication ou de l'installation de vos
+packages.
+
+Notamment les versions `v1.2.3-local` ou `v1.2.3-dev` sont invalides.
 
 :::
 
