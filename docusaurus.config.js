@@ -87,6 +87,12 @@ const config = {
     themeConfig:
         /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
         {
+            metadata: [
+                {
+                    name: "keywords",
+                    content: "blog, python, data science, development",
+                },
+            ],
             // // Replace with your project's social card
             // image: 'img/docusaurus-social-card.jpg',
             navbar: {
