@@ -5,7 +5,10 @@ export default function LayoutWrapper(props) {
     return (
         <>
             <Layout {...props} />
-            <script defer src="/_vercel/insights/script.js"></script>
+            <script
+                defer
+                src="https://blog-h4c5.vercel.app/_vercel/insights/script.js"
+            ></script>
         </>
     );
 }
